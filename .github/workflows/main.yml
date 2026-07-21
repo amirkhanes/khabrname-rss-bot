@@ -1,28 +1,50 @@
-name: RSS Bot
+import os
+import feedparser
+import requests
+import json
 
-on:
-  schedule:
-    - cron: "*/5 * * * *"
-  workflow_dispatch:
+BOT_TOKEN = os.environ["BOT_TOKEN"]
+CHANNEL_ID = "-1004426971236"
 
-jobs:
-  run-bot:
-    runs-on: ubuntu-latest
+FEEDS = [
+    "http://feeds.reuters.com/reuters/topNews",
+    "https://www.aljazeera.com/xml/rss/all.xml",
+    "https://oilprice.com/rss/main",
+    "https://www.tasnimnews.com/fa/rss",
+    "https://www.mehrnews.com/rss"
+]
 
-    steps:
-      - uses: actions/checkout@v4
+sent_file = "sent.json"
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.x"
+if os.path.exists(sent_file):
+    with open(sent_file, "r") as f:
+        sent = json.load(f)
+else:
+    sent = []
 
-      - name: Install packages
-        run: |
-          pip install feedparser requests
+def send_message(text):
+    url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
+    requests.post(
+        url,
+        data={
+            "chat_id": CHANNEL_ID,
+            "text": text,
+            "disable_web_page_preview": False
+        }
+    )
 
-      - name: Run bot
-        env:
-          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
-        run: |
-          python main.py
+for feed in FEEDS:
+    data = feedparser.parse(feed)
+
+    for item in reversed(data.entries[:5]):
+        link = item.get("link")
+
+        if link not in sent:
+            title = item.get("title", "")
+            msg = f"📰 {title}\n\n🔗 {link}"
+
+            send_message(msg)
+            sent.append(link)
+
+with open(sent_file, "w") as f:
+    json.dump(sent[-200:], f)
