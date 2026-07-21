@@ -8,11 +8,11 @@ BOT_TOKEN = os.environ["BOT_TOKEN"]
 CHANNEL_ID = "-1004426971236"
 
 FEEDS = [
-    "https://www.aljazeera.com/xml/rss/all.xml",
-    "https://feeds.bbci.co.uk/news/world/rss.xml",
-    "https://oilprice.com/rss/main",
     "http://feeds.reuters.com/reuters/topNews",
-    "https://feeds.feedburner.com/zerohedge/feed"
+    "https://www.aljazeera.com/xml/rss/all.xml",
+    "https://oilprice.com/rss/main",
+    "https://www.tasnimnews.com/fa/rss",
+    "https://www.mehrnews.com/rss"
 ]
 
 sent_file = "sent.json"
@@ -25,11 +25,14 @@ else:
 
 def send_message(text):
     url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
-    requests.post(url, data={
-        "chat_id": CHANNEL_ID,
-        "text": text,
-        "disable_web_page_preview": False
-    })
+    requests.post(
+        url,
+        data={
+            "chat_id": CHANNEL_ID,
+            "text": text,
+            "disable_web_page_preview": False
+        }
+    )
 
 while True:
     for feed in FEEDS:
