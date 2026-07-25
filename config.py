@@ -1,8 +1,14 @@
-BOT_TOKEN = None
+import os
+
+BOT_TOKEN = os.environ["BOT_TOKEN"]
 
 CHANNEL_ID = "-1004426971236"
 
+MESSAGE_TITLE = "AZ Khabar"
+
 MIN_SCORE = 60
+
+SOURCE_SCORE = 10
 
 MAX_SENT_NEWS = 200
 
@@ -13,8 +19,6 @@ HIGH_LEVEL = 95
 MEDIUM_LEVEL = 80
 
 LOW_LEVEL = 60
-
-MESSAGE_TITLE = "AZ Khabar"
 
 LEVEL_1 = "🔥"
 
