@@ -4,8 +4,8 @@ from scoring import score_news
 def filter_news(item, source):
 
     title = item.get("title", "")
-
     summary = item.get("summary", "")
+    link = item.get("link", "")
 
     send, score, level = score_news(
         title=title,
@@ -19,7 +19,7 @@ def filter_news(item, source):
     return {
         "title": title,
         "summary": summary,
-        "link": item.get("link", ""),
+        "link": link,
         "score": score,
         "level": level
     }
