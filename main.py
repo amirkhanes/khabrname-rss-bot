@@ -1,32 +1,45 @@
+import time
 import feedparser
 
 from feeds import FEEDS
-from duplicate_filter import load_sent, is_duplicate, add_news
+from duplicate_filter import (
+    load_sent,
+    is_duplicate,
+    add_news
+)
 from news_filter import filter_news
 from message_builder import build_message
 from telegram_sender import send_message
-
+from config import CHECK_COUNT
 
 sent = load_sent()
 
-for feed in FEEDS:
+while True:
 
-    data = feedparser.parse(feed)
+    for feed in FEEDS:
 
-    for item in reversed(data.entries[:10]):
+        try:
+            data = feedparser.parse(feed)
 
-        link = item.get("link", "")
+            for item in reversed(data.entries[:CHECK_COUNT]):
 
-        if is_duplicate(link, sent):
-            continue
+                link = item.get("link", "")
 
-        news = filter_news(item, feed)
+                if is_duplicate(link, sent):
+                    continue
 
-        if news is None:
-            continue
+                news = filter_news(item, feed)
 
-        message = build_message(news)
+                if news is None:
+                    continue
 
-        send_message(message)
+                message = build_message(news)
 
-        add_news(link, sent)
+                send_message(message)
+
+                add_news(link, sent)
+
+        except Exception as e:
+            print(e)
+
+    time.sleep(300)
