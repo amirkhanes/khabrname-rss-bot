@@ -16,46 +16,58 @@ def score_news(title, summary="", source=""):
 
     score = SOURCE_SCORE
 
+    matched = set()
+
     country_found = False
     topic_found = False
     industry_found = False
     change_found = False
 
-    # حذف خبرهای نامرتبط
+    # حذف کامل خبرهای نامرتبط
     for word in NEGATIVE_WORDS:
         if word.lower() in text:
             return False, 0, ""
 
-    # عبارات مهم
+    # عبارات مهم (فقط یک بار)
     for phrase, value in POSITIVE_PHRASES.items():
-        if phrase.lower() in text:
+        key = phrase.lower()
+        if key in text and key not in matched:
             score += value
+            matched.add(key)
 
     # کشورها
     for word, value in COUNTRY_SCORES.items():
-        if word.lower() in text:
+        key = word.lower()
+        if key in text and key not in matched:
             score += value
+            matched.add(key)
             country_found = True
 
     # موضوعات
     for word, value in TOPIC_SCORES.items():
-        if word.lower() in text:
+        key = word.lower()
+        if key in text and key not in matched:
             score += value
+            matched.add(key)
             topic_found = True
 
     # صنایع
     for word, value in INDUSTRY_SCORES.items():
-        if word.lower() in text:
+        key = word.lower()
+        if key in text and key not in matched:
             score += value
+            matched.add(key)
             industry_found = True
 
     # کلمات تغییر
     for word, value in CHANGE_WORDS.items():
-        if word.lower() in text:
+        key = word.lower()
+        if key in text and key not in matched:
             score += value
+            matched.add(key)
             change_found = True
 
-    # ضریب هوشمند
+    # امتیاز هوشمند
     if country_found and topic_found:
         score += 10
 
@@ -76,10 +88,8 @@ def score_news(title, summary="", source=""):
 
     if score >= 95:
         level = "🚨🔥🔥🔥"
-
     elif score >= 80:
         level = "🔥🔥"
-
     else:
         level = "🔥"
 
