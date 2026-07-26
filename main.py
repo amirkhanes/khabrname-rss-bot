@@ -16,10 +16,15 @@ sent = load_sent()
 
 while True:
 
-    for feed in FEEDS:
+    for source_name, feed in FEEDS.items():
 
         try:
+
             data = feedparser.parse(feed)
+
+            if data.bozo:
+                print(f"RSS Error : {source_name}")
+                continue
 
             for item in reversed(data.entries[:CHECK_COUNT]):
 
@@ -28,7 +33,7 @@ while True:
                 if is_duplicate(link, sent):
                     continue
 
-                news = filter_news(item, feed)
+                news = filter_news(item, source_name)
 
                 if news is None:
                     continue
@@ -40,6 +45,6 @@ while True:
                 add_news(link, sent)
 
         except Exception as e:
-            print(e)
+            print(f"{source_name}: {e}")
 
     time.sleep(300)
