@@ -1,8 +1,11 @@
+import os
 import requests
-from config import BOT_TOKEN, CHANNEL_ID
+
+BOT_TOKEN = os.environ["BOT_TOKEN"]
+CHANNEL_ID = os.environ["CHANNEL_ID"]
 
 
-def send_message(message):
+def send_message(text):
 
     url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
 
@@ -10,8 +13,8 @@ def send_message(message):
         url,
         data={
             "chat_id": CHANNEL_ID,
-            "text": message,
+            "text": text,
             "disable_web_page_preview": False
         },
-        timeout=30
+        timeout=20
     )
