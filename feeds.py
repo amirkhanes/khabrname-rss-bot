@@ -1,19 +1,24 @@
-FEEDS = [
-    # Reuters
+FEEDS = {
+
+    "Reuters":
     "http://feeds.reuters.com/reuters/topNews",
 
-    # Al Jazeera
+    "Al Jazeera":
     "https://www.aljazeera.com/xml/rss/all.xml",
 
-    # OilPrice
+    "OilPrice":
     "https://oilprice.com/rss/main",
 
-    # Tasnim
+    "Tasnim":
     "https://www.tasnimnews.com/fa/rss",
 
-    # Mehr
+    "Mehr":
     "https://www.mehrnews.com/rss",
 
-    # EcoNews
-    "https://www.econews.ir/fa/rss/allnews"
-]
+    "EcoIran":
+    "https://ecoiran.com/fa/rss",
+
+    "EconoNews":
+    "https://econews.ir/fa/rss"
+
+}
