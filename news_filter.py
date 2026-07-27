@@ -1,5 +1,6 @@
 from scoring import score_news
 from impact_detector import has_impact
+from duplicate_checker import is_duplicate_in_cycle
 
 
 def filter_news(item, source):
@@ -10,7 +11,11 @@ def filter_news(item, source):
 
     text = f"{title}\n{summary}"
 
-    # اگر هیچ اثر اقتصادی نداشت، رد شود
+    # خبر تکراری در همین اجرای ۵ دقیقه‌ای
+    if is_duplicate_in_cycle(title):
+        return None
+
+    # خبر فاقد اثر اقتصادی
     if not has_impact(text):
         return None
 
