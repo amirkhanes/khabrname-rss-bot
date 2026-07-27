@@ -3,6 +3,7 @@ import feedparser
 
 from feeds import FEEDS
 from duplicate_filter import load_sent, is_duplicate, add_news
+from duplicate_checker import reset_cycle
 from news_filter import filter_news
 from message_builder import build_message
 from telegram_sender import (
@@ -20,6 +21,9 @@ from config import CHECK_COUNT
 sent = load_sent()
 
 while True:
+
+    # ریست لیست خبرهای تکراری برای همین اجرای ۵ دقیقه‌ای
+    reset_cycle()
 
     for source_name, feed in FEEDS.items():
 
